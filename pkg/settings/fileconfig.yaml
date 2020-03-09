@@ -1,0 +1,6 @@
+#程序定时跑  单位秒
+Seconds: 720
+#程序需要监控的地址
+FilePath: /Users/shenzehua/Downloads/test
+#文件超过 timesetting 小时后删除，0表示立马删除
+TimeSetting: 0
