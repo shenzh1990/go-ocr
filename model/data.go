@@ -18,8 +18,7 @@ func init() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	Db.ShowSQL(true)
-	//err = Db.Sync2(new(Customer),new(Tag),new(Article))
+	Db.ShowSQL(false)
 
 	Db.DB().SetMaxIdleConns(10)
 	Db.DB().SetMaxOpenConns(100)

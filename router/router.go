@@ -23,6 +23,8 @@ func InitRouter() *gin.Engine {
 			"message": "pong",
 		})
 	})
+	r.GET("/getSegmentWord", controller.GetSegmentWord)
+	r.POST("/getSegment", controller.GetSegment)
 	r.POST("/login", controller.Login)
 	api_blog_v1 := r.Group("/api/v1")
 	api_blog_v1.Use(jwt.AuthorizedMiddelware(settings.JwtSecret))
