@@ -5,6 +5,7 @@ go 1.12
 require (
 	github.com/GoAdminGroup/go-admin v1.2.2
 	github.com/GoAdminGroup/themes v0.0.23
+	github.com/adamzy/cedar-go v0.0.0-20170805034717-80a9c64b256d
 	github.com/astaxie/beego v1.12.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/elazarl/goproxy v0.0.0-20191011121108-aa519ddbe484 // indirect
@@ -12,6 +13,8 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/go-xorm/xorm v0.7.9
 	github.com/gogf/gf v1.11.4 // indirect
+	github.com/gomodule/redigo v2.0.0+incompatible
+	github.com/huichen/sego v0.0.0-20180617034105-3f3c8a8cfacc // indirect
 	github.com/jasonlvhit/gocron v0.0.0-20191228163020-98b59b546dee
 	github.com/json-iterator/go v1.1.7
 	github.com/kr/pretty v0.1.0 // indirect

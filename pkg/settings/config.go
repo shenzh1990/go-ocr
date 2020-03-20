@@ -16,6 +16,7 @@ type Config struct {
 	WeiXin   WxConfig    `yaml:"WeiXin"`
 	Base     BaseConfig  `yaml:"Base"`
 	Db       DbConfig    `yaml:"Db"`
+	Redis    RedisConfig `yaml:"Redis"`
 }
 type BaseConfig struct {
 	RunMode      string        `yaml:"RunMode"`
@@ -45,6 +46,18 @@ type DingConfig struct {
 type FcoinConfig struct {
 	FcoinKey    string `yaml:"FcoinKey"`
 	FcoinSecret string `yaml:"FcoinSecret"`
+}
+
+type RedisConfig struct {
+	RedisHost string `yaml:"RedisHost"`
+	RedisDB   string `yaml:"RedisDB"`
+	RedisPwd  string `yaml:"RedisPwd"`
+	Timeout   int64  `yaml:"Timeout"`
+
+	PoolMaxIdle     int   `yaml:"PoolMaxIdle"`
+	PoolMaxActive   int   `yaml:"PoolMaxActive"`
+	PoolIdleTimeout int64 `yaml:"PoolIdleTimeout"`
+	PoolWait        bool  `yaml:"PoolWait"`
 }
 
 func (c *Config) getConf(filepath string) *Config {
