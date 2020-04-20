@@ -2,6 +2,33 @@ package main
 
 import "fmt"
 
+//221. 最大正方形
+func maximalSquare(matrix [][]byte) int {
+
+	side := 0
+	for i := 0; i < len(matrix); i++ {
+		for j := 0; j < len(matrix[i]); j++ {
+			matrix[i][j] = byte(int(matrix[i][j]) % 48)
+			if i < 1 || j < 1 {
+				if matrix[i][j] == 1 && side < 1 {
+					side = 1
+				}
+				continue
+			} else {
+				if matrix[i][j] == 1 {
+					temp := min(min(int(matrix[i-1][j]), int(matrix[i][j-1])), int(matrix[i-1][j-1])) + 1
+					matrix[i][j] = byte(temp)
+					if temp > side {
+						side = temp
+					}
+				}
+			}
+		}
+	}
+
+	return side * side
+}
+
 //1201. 丑数
 //请你帮忙设计一个程序，用来找出第 n 个丑数
 //丑数是可以被 a 或 b 或 c 整除的 正整数。

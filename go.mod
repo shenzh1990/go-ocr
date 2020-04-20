@@ -7,6 +7,7 @@ require (
 	github.com/GoAdminGroup/themes v0.0.23
 	github.com/adamzy/cedar-go v0.0.0-20170805034717-80a9c64b256d
 	github.com/astaxie/beego v1.12.1
+	github.com/cweill/gotests v1.5.3 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/elazarl/goproxy v0.0.0-20191011121108-aa519ddbe484 // indirect
 	github.com/gin-gonic/gin v1.4.0
@@ -23,8 +24,6 @@ require (
 	github.com/parnurzeal/gorequest v0.2.16
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/unknwon/com v1.0.1
-	golang.org/x/net v0.0.0-20190620200207-3b0461eec859 // indirect
-	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/yaml.v2 v2.2.7
 	moul.io/http2curl v1.0.0 // indirect
 )

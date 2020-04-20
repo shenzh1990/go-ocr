@@ -17,6 +17,7 @@ type Config struct {
 	Base     BaseConfig  `yaml:"Base"`
 	Db       DbConfig    `yaml:"Db"`
 	Redis    RedisConfig `yaml:"Redis"`
+	Baidu    BaiduConfig `yaml:"Baidu"`
 }
 type BaseConfig struct {
 	RunMode      string        `yaml:"RunMode"`
@@ -42,6 +43,13 @@ type DingConfig struct {
 	ChatId    string `yaml:"ChatId"`
 	Url       string `yaml:"Url"`
 	//manager5970
+}
+type BaiduConfig struct {
+	BaiduMap BaiduMapConfig `yaml:"BaiduMap"`
+}
+type BaiduMapConfig struct {
+	SK  string `yaml:"SK"`
+	Url string `yaml:"Url"`
 }
 type FcoinConfig struct {
 	FcoinKey    string `yaml:"FcoinKey"`

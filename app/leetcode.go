@@ -10,23 +10,33 @@ func main() {
 	start1 := time.Now() // 获取当前时间
 	//gas  = [2,3,4]
 	//cost = [3,4,3]
-	gas := []int{5, 1, 2, 3, 4}
-	cost := []int{4, 4, 1, 5, 1}
-	//gas  = [1,2,3,4,5]
-	//cost = [3,4,5,1,2]
-	fmt.Println(canCompleteCircuit(gas, cost))
-	// 载入词典
+	preorder := []int{3, 9, 20, 15, 7}
+	inorder := []int{9, 3, 15, 20, 7}
 
-	//part.LoadDictionary("../Bitcoin/data/dictionary.txt")
-	//part.LoadDictionaryToDb("../Bitcoin/data/dictionary.txt")
-	// part.LoadDictionaryFromDb()
-	// 分词
-	//text := []byte("我爱你中华人民共和国 沈泽华")
-	//segments := participle.PartSem.Segment(text)
-	//fmt.Println(participle.SegmentsToObject(segments, true))
-
-	//redisutil.RDS.SetEx("TEST:ex","测试仪1",10)
+	fmt.Println(buildTree(preorder, inorder))
 	elapsed1 := time.Since(start1)
 	fmt.Println("该函数执行完成耗时test：", elapsed1)
 
+}
+
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ *  前序遍历：根左右
+ *  中序遍历：左根右
+ *  后序遍历：左右根
+ */
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+func buildTree(preorder []int, inorder []int) *TreeNode {
+
+	return nil
 }

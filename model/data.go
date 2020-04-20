@@ -19,7 +19,7 @@ func init() {
 		fmt.Println(err)
 	}
 	Db.ShowSQL(false)
-
+	Db.CreateTables(GymInfo{})
 	Db.DB().SetMaxIdleConns(10)
 	Db.DB().SetMaxOpenConns(100)
 }
