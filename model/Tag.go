@@ -15,7 +15,7 @@ import "time"
 
 type Tag struct {
 	Id        int64     `xorm:"pk autoincr comment('用户名') INT(10)"`
-	Name      string    `json:"name" xorm:" notnull comment('标签名称') VARCHAR(100)"`
+	Name      string    `json:"name" xorm:" not null comment('标签名称') VARCHAR(100)"`
 	CreatedBy string    `json:"created_by" xorm:"default '' comment('创建人') VARCHAR(100)"`
 	CreatedAt time.Time `xorm:"created"`
 	UpdatedAt time.Time `xorm:"updated"`
