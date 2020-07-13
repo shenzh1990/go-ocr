@@ -1,6 +1,434 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+	"strconv"
+)
+
+/**
+* Definition for singly-linked list.
+* type ListNode struct {
+*     Val int
+*     Next *ListNode
+* }
+ */
+/**
+445. 两数相加 II
+*/
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+	nums := changeToNums(l1)
+	nums1 := changeToNums(l2)
+	fmt.Println(nums, nums1)
+	r := []int{}
+	lg := len(nums)
+	lg1 := len(nums1)
+	jw := 0
+	if lg >= lg1 {
+		for i := 0; i < lg; i++ {
+			if i < lg1 {
+				temp := nums[i] + nums1[i] + jw
+				if jw > 0 {
+					jw--
+				}
+				if temp >= 10 {
+					temp = temp - 10
+					jw++
+				}
+				r = append(r, temp)
+			} else {
+				temp := nums[i] + jw
+				if jw > 0 {
+					jw--
+				}
+				if temp >= 10 {
+					temp = temp - 10
+					jw++
+				}
+				r = append(r, temp)
+
+			}
+
+		}
+	} else {
+		for i := 0; i < lg1; i++ {
+			if i < lg {
+				temp := nums[i] + nums1[i] + jw
+				if jw > 0 {
+					jw--
+				}
+				if temp >= 10 {
+					temp = temp - 10
+					jw++
+				}
+				r = append(r, temp)
+			} else {
+				temp := nums1[i] + jw
+				if jw > 0 {
+					jw--
+				}
+				if temp >= 10 {
+					temp = temp - 10
+					jw++
+				}
+				r = append(r, temp)
+			}
+
+		}
+	}
+	if jw > 0 {
+		r = append(r, jw)
+		jw--
+	}
+	return SetRListNode(r)
+}
+
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+func SetRListNode(nums []int) (n *ListNode) {
+	n = &ListNode{
+		Val:  nums[len(nums)-1],
+		Next: nil,
+	}
+	for i := len(nums) - 2; i >= 0; i-- {
+		insertEndNode(n, nums[i])
+	}
+	return
+}
+func SetListNode(nums []int) (n *ListNode) {
+	n = &ListNode{
+		Val:  nums[0],
+		Next: nil,
+	}
+	for i := 1; i < len(nums); i++ {
+		insertEndNode(n, nums[i])
+	}
+	return
+}
+func insertEndNode(l *ListNode, val int) {
+	if l.Next == nil {
+		l.Next = &ListNode{
+			Val:  val,
+			Next: nil,
+		}
+		return
+	}
+	insertEndNode(l.Next, val)
+}
+func changeToNums(n *ListNode) (nums []int) {
+	if n.Next == nil {
+		nums = append(nums, n.Val)
+		return
+	}
+	for {
+		nums = append(nums, findIntFromListNode(n))
+		if n.Next == nil {
+			nums = append(nums, n.Val)
+			break
+		}
+	}
+
+	return
+}
+
+func findIntFromListNode(n *ListNode) int {
+	if n.Next == nil {
+		return n.Val
+	}
+	if n.Next.Next == nil {
+		a := n.Next.Val
+		n.Next = nil
+		return a
+	}
+	return findIntFromListNode(n.Next)
+}
+
+/**
+剑指 Offer 61. 扑克牌中的顺子
+*/
+func isStraight(nums []int) bool {
+	l := len(nums)
+	count := 0
+	if l != 5 {
+		return false
+	}
+	sort.Ints(nums)
+	for i := 0; i < l-1; i++ {
+		if nums[i] == 0 {
+			count++
+		} else {
+			if nums[i+1]-nums[i] > 1 {
+				count = count - (nums[i+1] - nums[i] - 1)
+			}
+			if nums[i+1]-nums[i] == 0 {
+				return false
+			}
+		}
+	}
+	if count < 0 {
+		return false
+	}
+	return true
+}
+
+/**
+1343. 大小为 K 且平均值大于等于阈值的子数组数目
+*/
+func numOfSubarrays(arr []int, k int, threshold int) int {
+	count := 0
+	sum := 0
+	num := k * threshold
+	for i := 0; i < len(arr); i++ {
+		if i < k {
+			sum += arr[i]
+		} else {
+			if i == k {
+				if sum >= num {
+					count++
+				}
+			}
+			sum = sum - arr[i-k] + arr[i]
+			if sum >= num {
+				count++
+			}
+		}
+	}
+	if k == len(arr) {
+		if sum >= num {
+			count++
+		}
+	}
+	return count
+}
+
+/**
+1330. 翻转子数组得到最大的数组值
+使用数轴表示
+a-----b
+   c------d
+差值为 |c-b|*2  所以需要 b 最小  c 最大 才能获得最大的值
+*/
+func maxValueAfterReverse(nums []int) int {
+	sum := 0
+	length := len(nums)
+	a := -100000 //区间小值
+	b := 100000  //区间大值
+	for i := 0; i < length-1; i++ {
+		sum += IntAbs(nums[i] - nums[i+1])
+		a = IntMax(a, IntMin(nums[i], nums[i+1]))
+		b = IntMin(b, IntMax(nums[i], nums[i+1]))
+	}
+	ans := sum
+	ans = IntMax(ans, 2*(a-b)+sum)
+	for i := 0; i < length-1; i++ {
+		if i > 0 {
+			minus := IntAbs(nums[0]-nums[i+1]) - IntAbs(nums[i]-nums[i+1])
+			ans = IntMax(ans, sum+minus)
+			minus = IntAbs(nums[i-1]-nums[length-1]) - IntAbs(nums[i-1]-nums[i])
+			ans = IntMax(ans, sum+minus)
+		}
+		//for j:=i+1;j<length-1;j++  {
+		//	minus:= IntAbs(nums[i]-nums[j])+IntAbs(nums[i+1]-nums[j+1])-(IntAbs(nums[i]-nums[i+1])+IntAbs(nums[j]-nums[j+1]))
+		//	ans = IntMax(ans,sum+minus)
+		//}
+	}
+
+	return ans
+}
+func IntAbs(a int) int {
+	if a < 0 {
+		return -a
+	}
+	return a
+}
+func IntMin(a, b int) int {
+	if a > b {
+		return b
+	}
+	return a
+}
+func IntMax(a, b int) int {
+	if a < b {
+		return b
+	}
+	return a
+}
+
+/**
+1258 查找双位数
+*/
+func findNumbers(nums []int) int {
+	count := 0
+	for _, value := range nums {
+		valueStr := strconv.Itoa(value)
+		if len(valueStr)%2 == 0 {
+			count++
+		}
+	}
+	return count
+}
+
+/*
+998. 最大二叉树 II
+*/
+func insertIntoMaxTree(root *TreeNode, val int) *TreeNode {
+
+	//right 为空返回 新增又树
+	if root == nil {
+		return &TreeNode{
+			Val:   val,
+			Left:  nil,
+			Right: nil,
+		}
+	}
+	//节点大于树，原树入左侧 ，节点做根
+	if root.Val < val {
+		return &TreeNode{
+			Val:   val,
+			Left:  root,
+			Right: nil,
+		}
+	}
+	root.Right = insertIntoMaxTree(root.Right, val)
+	return root
+}
+
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+/**
+654. 最大二叉树  递归解法
+*/
+func constructMaximumBinaryTree(nums []int) *TreeNode {
+	return construct(nums, 0, len(nums))
+}
+
+func construct(nums []int, l, r int) *TreeNode {
+
+	if l == r {
+		return nil
+	}
+	max_index := max(nums, l, r)
+	root := &TreeNode{
+		Val:   nums[max_index],
+		Left:  construct(nums, l, max_index),
+		Right: construct(nums, max_index+1, r),
+	}
+	return root
+}
+func max(nums []int, l, r int) int {
+	max_index := l
+	for i := l; i < r; i++ {
+		if nums[i] > nums[max_index] {
+			max_index = i
+		}
+	}
+	return max_index
+}
+
+/*
+1300. 转变数组后最接近目标值的数组和
+*/
+func findBestValue(arr []int, target int) int {
+	//默认排序
+	sort.Ints(arr)
+	length := len(arr)
+	presum := 0
+	endLen := length
+	for index, value := range arr {
+		k := endLen - index
+		// 条件  未改变的和 + 当前 value*剩余的项 与 target 的比较
+		d := presum + value*k - target
+		if d >= 0 {
+			//fmt.Println(d,value,endLen,index)
+			// c小于等于0.5那么取小 大于0.5 去取上值
+			c := value - (d+k/2)/k
+			return c
+		}
+		presum += value
+	}
+
+	return arr[length-1]
+}
+
+/**
+1052. 爱生气的书店老板
+*/
+func maxSatisfied(customers []int, grumpy []int, X int) int {
+
+	count := 0
+	//默认的值
+	for i := 0; i < len(customers); i++ {
+		if grumpy[i] == 0 {
+			count += customers[i]
+			//设为0
+			customers[i] = 0
+		}
+	}
+
+	max := 0
+	temp := 0
+	for i := 0; i < len(customers); i++ {
+
+		//for j:=0 ;j<X;j++{
+		//	if grumpy[i+j]==1{
+		//		temp+=customers[i+j]
+		//	}
+		//}
+		if i < X {
+			max += customers[i]
+			if temp < max {
+				temp = max
+			}
+		} else {
+			temp = temp + customers[i] - customers[i-X]
+			if temp > max {
+				max = temp
+			}
+		}
+	}
+
+	return count + max
+}
+
+/**
+747. 至少是其他数字两倍的最大数
+*/
+func dominantIndex(nums []int) int {
+
+	if len(nums) <= 1 {
+		return 0
+	}
+	big := nums[0]
+	secdbig := nums[1]
+	if nums[1] >= nums[0] {
+		big = nums[0]
+		secdbig = nums[1]
+	}
+
+	count := 0
+	for i := 1; i < len(nums); i++ {
+		if big < nums[i] {
+			secdbig = big
+			big = nums[i]
+			count = i
+
+		}
+		if big > nums[i] && nums[i] > secdbig {
+			secdbig = nums[i]
+		}
+	}
+	if secdbig*2 <= big {
+		return count
+	}
+	return -1
+}
 
 //221. 最大正方形
 func maximalSquare(matrix [][]byte) int {
