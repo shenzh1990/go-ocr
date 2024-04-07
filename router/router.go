@@ -1,19 +1,19 @@
 package router
 
 import (
-	"BitCoin/api/blog_v1"
-	"BitCoin/controller"
-	"BitCoin/middleware/cors"
-	"BitCoin/middleware/jwt"
-	"BitCoin/pkg/settings"
 	"github.com/gin-gonic/gin"
+	v1 "go-ocr/api/v1"
+	"go-ocr/middleware/cors"
+	"go-ocr/pkg/settings"
 )
+
+type IgnoreGinStdoutWritter struct{}
 
 func InitRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(cors.Cors())
+	gin.DisableConsoleColor() // 关闭Gin的日志颜色
 	r.Use(gin.Logger())
-
 	r.Use(gin.Recovery())
 
 	gin.SetMode(settings.RunMode)
@@ -23,20 +23,8 @@ func InitRouter() *gin.Engine {
 			"message": "pong",
 		})
 	})
-	r.GET("/getSegmentWord", controller.GetSegmentWord)
-	r.POST("/getSegment", controller.GetSegment)
-	r.POST("/login", controller.Login)
-	api_blog_v1 := r.Group("/api/v1")
-	api_blog_v1.Use(jwt.AuthorizedMiddelware(settings.JwtSecret))
-	{
-		//获取标签列表
-		api_blog_v1.GET("/tags", blog_v1.GetTags)
-		//新建标签
-		api_blog_v1.POST("/tags", blog_v1.AddTag)
-		//更新指定标签
-		api_blog_v1.PUT("/tags/:id", blog_v1.EditTag)
-		//删除指定标签
-		api_blog_v1.DELETE("/tags/:id", blog_v1.DeleteTag)
-	}
+	//r.GET("/getSegmentWord", controller.GetSegmentWord)
+	r.POST("/get_order_info", v1.GetOrderInfo)
+	//r.POST("/login", controller.Login)
 	return r
 }

@@ -1,36 +1,21 @@
 Base:
+  Version: v1.0
   RunMode: debug
   HTTPPort: 8888
   ReadTimeout:  100
   WriteTimeout: 100
   PageSize: 10
   JwtSecret:  default
+  CpuMaxProcess: -1
 Db:
   DriverName: mysql
   #user=postgres password=1qaz2wsx dbname=postgres host=10.168.1.164 port=5432 sslmode=disable
-  DBUrl: clickhousedb:SDTa123vclickhousedbdf@tcp(115.236.176.108:10000)/clickhousedb?charset=utf8
-Fcoin:
-  FcoinKey: 9b5b673ea71a45469bf67f4b35cfd3e5
-  FcoinSecret: 94946a7cc7b54892a10b57f1bb6f79c5
-DingDing:
-  #dingbigjklvrvywzugyi  --h5
-  #dingpi7r03l7j3bkskbk  --小程序
-  #dingosohlwjmkv4maygi  --机器人
-  AppKey:   dingbigjklvrvywzugyi
-  #4h-4Dxen5OAs_g-n0NI4ftC1Ty6zbud0FwGV3U7-cg3S6AMB-WDV2q6KTbb2VKmS
-  #YA8O8WFwRcdSL5W5RvxOZTx9ApSXEmPomQMwzGvZAI5KXEsayY82tmi_E4Z2lVmp
-  #w2qgrGogfcPII3VVN5qc8-9FdgWyhkepRBynupxtsiN_VBGcjPivmw6bIoTNHMFk
-  AppSecret: 4h-4Dxen5OAs_g-n0NI4ftC1Ty6zbud0FwGV3U7-cg3S6AMB-WDV2q6KTbb2VKmS
-  ChatId : chat8e79c5ef3d7153dc240035dbe788d00a
-  Url: https://oapi.dingtalk.com
-WeiXin:
-  AppKey:   wx1dca37c48032e97a
-  AppSecret: bf014c16318f3269beccd418c8ce33b2
-  Url: https://api.weixin.qq.com
+  DBUrl:
+
 Redis:
-  RedisHost: 10.10.76.217:6379
-  RedisDB: 1
-  RedisPwd: herenit123456
+  RedisHost: 192.168.100.24:6379
+  RedisDB: 5
+  RedisPwd: 123456
   Timeout: 20
   PoolMaxIdle: 10
   PoolMaxActive: 1

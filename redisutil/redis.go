@@ -1,9 +1,13 @@
 package redisutil
 
 import (
-	"BitCoin/pkg/settings"
 	"github.com/gomodule/redigo/redis"
+	"go-ocr/pkg/settings"
 	"time"
+)
+
+const (
+	DEFAULT_REDIS_PRE_KEY = "ocr:image:"
 )
 
 type RedisDataStore struct {
@@ -79,16 +83,16 @@ func (r *RedisDataStore) SetEx(k string, v interface{}, ex int64) error {
 
 var RDS RedisDataStore
 
-func init() {
+func Start() {
 	RDS = RedisDataStore{
-		RedisHost:       settings.BitConfig.Redis.RedisHost,
-		RedisDB:         settings.BitConfig.Redis.RedisDB,
-		RedisPwd:        settings.BitConfig.Redis.RedisPwd,
-		Timeout:         settings.BitConfig.Redis.Timeout,
-		PoolMaxIdle:     settings.BitConfig.Redis.PoolMaxIdle,
-		PoolMaxActive:   settings.BitConfig.Redis.PoolMaxActive,
-		PoolIdleTimeout: settings.BitConfig.Redis.PoolIdleTimeout,
-		PoolWait:        settings.BitConfig.Redis.PoolWait,
+		RedisHost:       settings.OcrConfig.Redis.RedisHost,
+		RedisDB:         settings.OcrConfig.Redis.RedisDB,
+		RedisPwd:        settings.OcrConfig.Redis.RedisPwd,
+		Timeout:         settings.OcrConfig.Redis.Timeout,
+		PoolMaxIdle:     settings.OcrConfig.Redis.PoolMaxIdle,
+		PoolMaxActive:   settings.OcrConfig.Redis.PoolMaxActive,
+		PoolIdleTimeout: settings.OcrConfig.Redis.PoolIdleTimeout,
+		PoolWait:        settings.OcrConfig.Redis.PoolWait,
 		RedisPool:       nil,
 	}
 	RDS.RedisPool = RDS.NewPool()

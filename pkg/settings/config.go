@@ -11,49 +11,23 @@ import (
 var config = flag.String("f", "./pkg/settings/config.yaml", "config file")
 
 type Config struct {
-	Fcoin    FcoinConfig `yaml:"Fcoin"`
-	DingDing DingConfig  `yaml:"DingDing"`
-	WeiXin   WxConfig    `yaml:"WeiXin"`
-	Base     BaseConfig  `yaml:"Base"`
-	Db       DbConfig    `yaml:"Db"`
-	Redis    RedisConfig `yaml:"Redis"`
-	Baidu    BaiduConfig `yaml:"Baidu"`
+	Base  BaseConfig  `yaml:"Base"`
+	Db    DbConfig    `yaml:"Db"`
+	Redis RedisConfig `yaml:"Redis"`
 }
 type BaseConfig struct {
-	RunMode      string        `yaml:"RunMode"`
-	HTTPPort     int           `yaml:"HTTPPort"`
-	ReadTimeout  time.Duration `yaml:"ReadTimeout"`
-	WriteTimeout time.Duration `yaml:"WriteTimeout"`
-	PageSize     int           `yaml:"PageSize"`
-	JwtSecret    string        `yaml:"JwtSecret"`
+	RunMode       string        `yaml:"RunMode"`
+	CpuMaxProcess int           `yaml:"CpuMaxProcess"`
+	Version       string        `yaml:"Version"`
+	HTTPPort      int           `yaml:"HTTPPort"`
+	ReadTimeout   time.Duration `yaml:"ReadTimeout"`
+	WriteTimeout  time.Duration `yaml:"WriteTimeout"`
+	PageSize      int           `yaml:"PageSize"`
+	JwtSecret     string        `yaml:"JwtSecret"`
 }
 type DbConfig struct {
 	DriverName string `yaml:"DriverName"`
 	DBUrl      string `yaml:"DBUrl"`
-}
-type WxConfig struct {
-	AppKey    string `yaml:"AppKey"`
-	AppSecret string `yaml:"AppSecret"`
-	Url       string `yaml:"Url"`
-}
-
-type DingConfig struct {
-	AppKey    string `yaml:"AppKey"`
-	AppSecret string `yaml:"AppSecret"`
-	ChatId    string `yaml:"ChatId"`
-	Url       string `yaml:"Url"`
-	//manager5970
-}
-type BaiduConfig struct {
-	BaiduMap BaiduMapConfig `yaml:"BaiduMap"`
-}
-type BaiduMapConfig struct {
-	SK  string `yaml:"SK"`
-	Url string `yaml:"Url"`
-}
-type FcoinConfig struct {
-	FcoinKey    string `yaml:"FcoinKey"`
-	FcoinSecret string `yaml:"FcoinSecret"`
 }
 
 type RedisConfig struct {
@@ -80,27 +54,30 @@ func (c *Config) getConf(filepath string) *Config {
 	return c
 }
 func init() {
-	BitConfig.getConf(*config)
+	flag.Parse()
+	OcrConfig.getConf(*config)
 	LoadBase()
 }
 
 var (
-	BitConfig Config
-	RunMode   string
-
-	HTTPPort     int
-	ReadTimeout  time.Duration
-	WriteTimeout time.Duration
-
-	PageSize  int
-	JwtSecret string
+	OcrConfig     Config
+	RunMode       string
+	Version       string
+	HTTPPort      int
+	ReadTimeout   time.Duration
+	WriteTimeout  time.Duration
+	CpuMaxProcess int
+	PageSize      int
+	JwtSecret     string
 )
 
 func LoadBase() {
-	RunMode = BitConfig.Base.RunMode
-	HTTPPort = BitConfig.Base.HTTPPort
-	ReadTimeout = BitConfig.Base.ReadTimeout * time.Second
-	WriteTimeout = BitConfig.Base.WriteTimeout * time.Second
-	JwtSecret = BitConfig.Base.JwtSecret
-	PageSize = BitConfig.Base.PageSize
+	CpuMaxProcess = OcrConfig.Base.CpuMaxProcess
+	Version = OcrConfig.Base.Version
+	RunMode = OcrConfig.Base.RunMode
+	HTTPPort = OcrConfig.Base.HTTPPort
+	ReadTimeout = OcrConfig.Base.ReadTimeout * time.Second
+	WriteTimeout = OcrConfig.Base.WriteTimeout * time.Second
+	JwtSecret = OcrConfig.Base.JwtSecret
+	PageSize = OcrConfig.Base.PageSize
 }

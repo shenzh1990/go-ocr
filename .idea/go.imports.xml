@@ -3,7 +3,7 @@
   <component name="GoImports">
     <option name="excludedPackages">
       <array>
-        <option value="BitCoin/settings" />
+        <option value="go-ocr/settings" />
       </array>
     </option>
   </component>

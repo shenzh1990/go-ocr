@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BitCoin.iml" filepath="$PROJECT_DIR$/BitCoin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/go-ocr.iml" filepath="$PROJECT_DIR$/go-ocr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/onstart/onstart.iml" filepath="$PROJECT_DIR$/onstart/onstart.iml" />
     </modules>
   </component>
 </project>
