@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	DEFAULT_REDIS_PRE_KEY = "ocr:image:"
+	DEFAULT_REDIS_PRE_KEY    = "ocr:image:"
+	DEFAULT_REDIS_PRE_NX_KEY = "ocr:image:nx:"
 )
 
 type RedisDataStore struct {
@@ -80,6 +81,18 @@ func (r *RedisDataStore) SetEx(k string, v interface{}, ex int64) error {
 	defer c.Close()
 	_, err := c.Do("SET", k, v, "EX", ex)
 	return err
+}
+func (r *RedisDataStore) SetNxEx(k string, v interface{}, ex int64) (interface{}, error) {
+	c := r.RedisPool.Get()
+	defer c.Close()
+	result, err := c.Do("SETNX", k, v)
+	return result, err
+}
+func (r *RedisDataStore) Del(k string) (interface{}, error) {
+	c := r.RedisPool.Get()
+	defer c.Close()
+	result, err := c.Do("DEL", k)
+	return result, err
 }
 
 var RDS RedisDataStore

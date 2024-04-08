@@ -17,9 +17,16 @@ const (
 	POS_YFK  string = "yfk"
 	POS_DDBH string = "ddbh"
 	POS_XDSJ string = "xdsj"
+
+	OCR_SUCCESS string = "1"
+	OCR_ING     string = "2"
+	OCR_FAIL    string = "3"
+	OCR_UNKNOWN string = "0"
 )
 
 type Order struct {
+	OcrStatue string `json:"ocr_statue"` // 0:未识别 1:识别成功 2:识别中 3:识别失败
+	OcrMsg    string `json:"ocr_msg"`    // 识别失败的原因
 	Dues      string `json:"dues"`
 	OrderTime string `json:"order_time"`
 	OrderNum  string `json:"order_num"`
@@ -31,6 +38,7 @@ type Order struct {
 {"imagetype":"0","imagebase":"","whitelist":"","languages":"chi_sim","trim":"","unid":"1234"}
 */
 func OcrOrderInfo(c *gin.Context) {
+
 	var imagebody services.OcrBody
 	err := c.BindJSON(&imagebody)
 	if err != nil {
@@ -41,6 +49,7 @@ func OcrOrderInfo(c *gin.Context) {
 		c.String(http.StatusOK, common.JsonResponse(e.INVALID_PARAMS, "请输入确认输入Unid和Image", ""))
 		return
 	}
+	//先查询是否存在，存在就直接返回，不存在就执行ocr
 	result, err := redisutil.RDS.Get(redisutil.DEFAULT_REDIS_PRE_KEY + imagebody.Unid)
 	if err != nil {
 		c.String(http.StatusOK, common.JsonResponse(e.ERROR, "redis 获取失败", ""))
@@ -56,8 +65,25 @@ func OcrOrderInfo(c *gin.Context) {
 		}
 	} else {
 		go func() {
-			err = redisutil.RDS.SetEx(redisutil.DEFAULT_REDIS_PRE_KEY+imagebody.Unid, GetOrderSync(imagebody), 1000)
-			cmn.Error(err)
+			result, _ := redisutil.RDS.SetNxEx(redisutil.DEFAULT_REDIS_PRE_NX_KEY+imagebody.Unid, imagebody.Unid, 1000)
+			defer func() {
+				redisutil.RDS.Del(redisutil.DEFAULT_REDIS_PRE_NX_KEY + imagebody.Unid)
+			}()
+			flag, ok := result.(int64)
+			if ok {
+				//1 不存在并设置值
+				//0 存在失败
+				if flag == 1 {
+					order := Order{}
+					order.OcrStatue = OCR_ING
+					//设置执行中
+					err = redisutil.RDS.SetEx(redisutil.DEFAULT_REDIS_PRE_KEY+imagebody.Unid, common.JsonResponse(e.SUCCESS, "", order), 2592000)
+					//执行异步识别
+					order = GetOrderSync(imagebody)
+					//设置执行状态
+					err = redisutil.RDS.SetEx(redisutil.DEFAULT_REDIS_PRE_KEY+imagebody.Unid, common.JsonResponse(e.SUCCESS, "", order), 2592000)
+				}
+			}
 		}()
 	}
 	c.String(http.StatusOK, common.JsonResponse(e.SUCCESS, "", ""))
@@ -92,21 +118,22 @@ func GetOrderInfo(c *gin.Context) {
 	}
 	c.String(http.StatusOK, string(strValue))
 }
-func GetOrderSync(imagebody services.OcrBody) string {
-	var Result string
+func GetOrderSync(imagebody services.OcrBody) Order {
+	order := Order{}
 	bT := time.Now() // 开始时间
 	text, err := services.ImageOcr(imagebody)
 	eT := time.Since(bT) // 从开始到当前所消耗的时间
 	cmn.Info("ImageOcr Run time: ", eT)
 	if err != nil {
-		Result = common.JsonResponse(e.ERROR_OCR_IMG, err.Error(), "")
-		return Result
+		order.OcrStatue = OCR_FAIL
+		order.OcrMsg = "ocr失败：" + err.Error()
+		return order
 	}
 	bT = time.Now() // 开始时间
 	pts := services.Participle(text)
 	eT = time.Since(bT) // 从开始到当前所消耗的时间
 	cmn.Info("Participle Run time: ", eT)
-	order := Order{}
+
 	if pts != nil && len(pts) > 0 {
 		for i, pt := range pts {
 			{
@@ -148,12 +175,15 @@ func GetOrderSync(imagebody services.OcrBody) string {
 			}
 		}
 	} else {
-		Result = common.JsonResponse(e.ERROR_OCR_IMG, "没有正确的ocr数据", "")
-		return Result
+		order.OcrStatue = OCR_FAIL
+		order.OcrMsg = "ocr失败：无法正确分词"
+		order.OcrText = text
+		return order
 	}
+	order.OcrStatue = OCR_SUCCESS
+	order.OcrMsg = "ocr成功"
 	order.OcrText = text
-	Result = common.JsonResponse(e.SUCCESS, "", order)
-	return Result
+	return order
 }
 func parseTime(str string) (time.Time, error) {
 	formats := []string{

@@ -79,6 +79,7 @@ func ImageOcr(imageBody OcrBody) (string, error) {
 	//if ok := gocv.IMWrite(tempfile.Name(), grayImg); !ok {
 	//	return "", nil
 	//}
+	//time.Sleep(10 * time.Second)
 	//return "", nil
 	client := gosseract.NewClient()
 	defer client.Close()
