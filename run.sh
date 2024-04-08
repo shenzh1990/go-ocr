@@ -6,7 +6,7 @@ PROGRAM_NAME="go-ocr"
 # 停止正在运行的 go-ocr 程序
 if pgrep -f "$PROGRAM_NAME" > /dev/null; then
     echo "Stopping $PROGRAM_NAME..."
-    pkill -f "$PROGRAM_NAME"
+    pkill -9 -f "$PROGRAM_NAME"
 fi
 
 # 检查是否停止成功
@@ -30,3 +30,5 @@ if [ $? -eq 0 ]; then
 else
     echo "Error: Compilation of $PROGRAM_NAME failed."
 fi
+sleep 2
+tailf nohup.out

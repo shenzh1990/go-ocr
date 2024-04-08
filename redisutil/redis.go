@@ -2,6 +2,7 @@ package redisutil
 
 import (
 	"github.com/gomodule/redigo/redis"
+	"github.com/gotoeasy/glang/cmn"
 	"go-ocr/pkg/settings"
 	"time"
 )
@@ -84,6 +85,7 @@ func (r *RedisDataStore) SetEx(k string, v interface{}, ex int64) error {
 var RDS RedisDataStore
 
 func Start() {
+	cmn.Info("Redis Init")
 	RDS = RedisDataStore{
 		RedisHost:       settings.OcrConfig.Redis.RedisHost,
 		RedisDB:         settings.OcrConfig.Redis.RedisDB,

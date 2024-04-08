@@ -17,14 +17,14 @@ func InitRouter() *gin.Engine {
 	r.Use(gin.Recovery())
 
 	gin.SetMode(settings.RunMode)
-
-	r.GET("/ping", func(c *gin.Context) {
+	app_context := r.Group("/go-ocr")
+	app_context.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
 	})
-	//r.GET("/getSegmentWord", controller.GetSegmentWord)
-	r.POST("/get_order_info", v1.GetOrderInfo)
-	//r.POST("/login", controller.Login)
+	go_ocr_v1 := app_context.Group("/api/v1")
+	go_ocr_v1.POST("/get_order_info", v1.GetOrderInfo)
+	go_ocr_v1.POST("/ocr_order_info", v1.OcrOrderInfo)
 	return r
 }

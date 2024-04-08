@@ -36,7 +36,6 @@ func Participle(text string) []participle.TextWord {
 }
 
 func ImageOcr(imageBody OcrBody) (string, error) {
-	//return "", nil
 	//创建一个临时文件
 	tempfile, err := ioutil.TempFile("", "ocrserver"+"-")
 	if err != nil {
@@ -67,7 +66,20 @@ func ImageOcr(imageBody OcrBody) (string, error) {
 			return "", err
 		}
 	}
-
+	//// Step 1: 读取图片
+	//img := gocv.IMRead(tempfile.Name(), gocv.IMReadColor)
+	//defer img.Close()
+	//// 转换为灰度图像
+	//grayImg := gocv.NewMat()
+	//defer grayImg.Close()
+	//gocv.CvtColor(img, &grayImg, gocv.ColorBGRToGray)
+	//// 应用高斯模糊
+	//gocv.GaussianBlur(grayImg, &grayImg, image.Pt(5, 5), 0.0, 0, gocv.BorderDefault)
+	//// 将处理后的灰度图像保存回临时文件
+	//if ok := gocv.IMWrite(tempfile.Name(), grayImg); !ok {
+	//	return "", nil
+	//}
+	//return "", nil
 	client := gosseract.NewClient()
 	defer client.Close()
 

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gotoeasy/glang/cmn"
 	"go-ocr/pkg/settings"
-	"go-ocr/redisutil"
 	"go-ocr/router"
 	"net/http"
 )
@@ -21,7 +20,5 @@ func Run() {
 	}
 
 	s.ListenAndServe()
-	// 显式调用触发数据库、redis等
-	//model.Start()
-	redisutil.Start()
+
 }
